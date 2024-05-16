@@ -1,0 +1,96 @@
+# ------------------------------------------------------------------------
+# Copyright (c) 2022 megvii-model. All Rights Reserved.
+# ------------------------------------------------------------------------
+# Modified from BasicSR (https://github.com/xinntao/BasicSR)
+# Copyright 2018-2020 BasicSR Authors
+# ------------------------------------------------------------------------
+# general settings
+name: PartFormer_50
+model_type: ImageRestorationModel
+scale: 1
+num_gpu: 1
+manual_seed: 10
+
+datasets:
+  test_1:
+    task: denoising_color
+    name: CBSD68
+    type: PairedImageDataset_gass
+    dataroot_gt: ./datasets/Denoisy/CBSD68
+    dataroot_lq: ./datasets/Denoisy/CBSD68
+    filename_tmpl: '{}'
+    sigma_type: constant
+    sigma_range: 50
+    io_backend:
+      type: disk
+  
+  test_2:
+    task: denoising_color
+    name: Kodak24
+    type: PairedImageDataset_gass
+    dataroot_gt: ./datasets/Denoisy/Kodak
+    dataroot_lq: ./datasets/Denoisy/Kodak
+    filename_tmpl: '{}'
+    sigma_type: constant
+    sigma_range: 50
+    io_backend:
+      type: disk
+  
+  test_3:
+    task: denoising_color
+    name: McMaster
+    type: PairedImageDataset_gass
+    dataroot_gt: ./datasets/Denoisy/McMaster
+    dataroot_lq: ./datasets/Denoisy/McMaster
+    filename_tmpl: '{}'
+    sigma_type: constant
+    sigma_range: 50
+    io_backend:
+      type: disk
+  
+
+  test_4:
+    task: denoising_color
+    name: Urban100
+    type: PairedImageDataset_gass
+    dataroot_gt: ./datasets/Denoisy/Urban100
+    dataroot_lq: ./datasets/Denoisy/Urban100
+    filename_tmpl: '{}'
+    sigma_type: constant
+    sigma_range: 50
+    io_backend:
+      type: disk
+
+
+network_g:
+  type: PART
+  in_chans: 3
+  img_size: 128
+  img_range: 1.
+  depth: [19]
+  embed_dim: 96
+  num_heads: [2]
+  expansion_factor: 2
+  resi_connection: '3conv'
+  split_size: [8,32]
+
+# path
+path:
+  pretrain_network_g: experiments/PartFormer-Gauss-color/models/net_g_latest.pth
+  strict_load_g: true
+
+
+# validation settings
+val:
+  save_img: true
+  use_image: false
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 4
+      test_y_channel: false
+    ssim:
+      type: calculate_ssim
+      crop_border: 4
+      test_y_channel: false
