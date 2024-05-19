@@ -97,14 +97,7 @@ def windows2img(img_splits_hw, H_sp, W_sp, H, W):
 
 
 class PFN(nn.Module):
-    """ Spatial-Gate Feed-Forward Network.
-    Args:
-        in_features (int): Number of input channels.
-        hidden_features (int | None): Number of hidden channels. Default: None
-        out_features (int | None): Number of output channels. Default: None
-        act_layer (nn.Module): Activation layer. Default: nn.GELU
-        drop (float): Dropout rate. Default: 0.0
-    """
+
     def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0.):
         super().__init__()
         out_features = out_features or in_features
